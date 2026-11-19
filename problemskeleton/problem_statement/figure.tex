@@ -1,9 +1,7 @@
 % Source of figure.png (the figure in problem.tex).
 % Build: pdflatex figure.tex && pdftoppm -r 300 -png -singlefile figure.pdf figure
-\documentclass[tikz,border=6pt]{standalone}
-\usepackage{tikz}
 \usetikzlibrary{arrows.meta}
-\begin{document}
+
 \begin{tikzpicture}[
     >={Stealth[length=3mm]},
     guest/.style={circle, draw, thick, minimum size=9mm, inner sep=0pt, font=\large},
@@ -26,4 +24,3 @@
   \draw[gift] (5) -- (1);
   \draw[gift] (6) -- (2);
 \end{tikzpicture}
-\end{document}
