@@ -1,74 +1,23 @@
+#!/usr/bin/env python3
+"""Test-case generator for "Awkward-Free Photo".
+
+The generator only produces INPUTS. The .ans files are produced afterwards by running
+the accepted solution
+
+Graph families (all are "cycles with trees hanging off them"):
+  fixed      an explicit list a_1..a_n written by hand
+  cycles     given cycle lengths, remaining guests attach as trees with a chosen shape:
+               random   to a random earlier vertex          (bushy random trees)
+               chain    to the previous vertex              (one very long path)
+               star     to a random cycle vertex            (huge stars on the cycle)
+               deep     to one of the 5 newest vertices     (long thin deep trees)
+               cater    alternately extend a spine / add a leaf (caterpillar)
+"""
 import os
 import random
 import sys
 
 MAX_N = 10 ** 5
-
-
-# --------------------------------------------------------------------------- solver
-def solve(a):
-    """a is the list a_1..a_n. Returns the maximum independent set size."""
-    n = len(a)
-    nxt = [0] + list(a)
-    indeg = [0] * (n + 1)
-    for i in range(1, n + 1):
-        indeg[nxt[i]] += 1
-    take = [1] * (n + 1)
-    skip = [0] * (n + 1)
-    peeled = [False] * (n + 1)
-    stack = [i for i in range(1, n + 1) if indeg[i] == 0]
-    while stack:
-        v = stack.pop()
-        peeled[v] = True
-        p = nxt[v]
-        take[p] += skip[v]
-        skip[p] += max(take[v], skip[v])
-        indeg[p] -= 1
-        if indeg[p] == 0:
-            stack.append(p)
-    NEG = -10 ** 15
-    total = 0
-    seen = [False] * (n + 1)
-    for s in range(1, n + 1):
-        if peeled[s] or seen[s]:
-            continue
-        cyc, v = [], s
-        while True:
-            seen[v] = True
-            cyc.append(v)
-            v = nxt[v]
-            if v == s:
-                break
-        best = 0
-        for first in (0, 1):
-            pin = take[cyc[0]] if first else NEG
-            pout = skip[cyc[0]] if not first else NEG
-            for c in cyc[1:]:
-                pin, pout = pout + take[c], max(pin, pout) + skip[c]
-            best = max(best, pout if first else max(pin, pout))
-        total += best
-    return total
-
-
-def brute(a):
-    """Exponential maximum independent set, only for tiny n."""
-    n = len(a)
-    adj = [0] * n
-    for i in range(n):
-        j = a[i] - 1
-        adj[i] |= 1 << j
-        adj[j] |= 1 << i
-
-    def f(mask):
-        if mask == 0:
-            return 0
-        v = (mask & -mask).bit_length() - 1
-        rest = mask & ~(1 << v)
-        if adj[v] & mask == 0:
-            return 1 + f(rest)
-        return max(f(rest), 1 + f(rest & ~adj[v]))
-
-    return f((1 << n) - 1)
 
 
 # --------------------------------------------------------------------------- builders
@@ -139,7 +88,7 @@ def case_cycles(n, seed, lens_fn, attach):
     return build_cycles(n, lens_fn(n, rng), attach, rng)
 
 
-FIXED_GREEDY = [10, 7, 6, 7, 4, 5, 4, 2, 11, 12, 3, 10]  # found by search, see Description
+TRICKY_12 = [10, 7, 6, 7, 4, 5, 4, 2, 11, 12, 3, 10]  # found by search; answer 7
 
 # (name, builder, description)
 SAMPLES = [
@@ -162,8 +111,8 @@ SECRET = [
      "Edge case: five disjoint 2-cycles (several components, every cycle has length 2). Answer 5."),
     ("05_edge_star_into_2cycle", lambda: [2, 1] + [1] * 6,
      "Edge case: six leaves all giving to the same guest of a mutual pair (a star). Answer 7."),
-    ("06_handcrafted_anti_static_greedy", lambda: FIXED_GREEDY,
-     "Hand-crafted: 12 guests where sorting once by initial degree (static greedy) gives 6 but the optimum is 7."),
+    ("06_handcrafted_tricky_12", lambda: TRICKY_12,
+     "Hand-crafted: 12 guests with several cycle/tree interactions, found by search. Answer 7. Sorting guests once by initial degree and greedily picking gives only 6, so heuristics fail here."),
     ("07_small_random_a", lambda: case_random(12, 101),
      "Small random functional graph (n = 12), mixed tree shapes and cycle lengths."),
     ("08_small_random_b", lambda: case_random(16, 102),
@@ -220,8 +169,6 @@ def write_case(folder, name, a):
     check_valid(a)
     with open(os.path.join(folder, name + ".in"), "w") as f:
         f.write("%d\n%s\n" % (len(a), " ".join(map(str, a))))
-    with open(os.path.join(folder, name + ".ans"), "w") as f:
-        f.write("%d\n" % solve(a))
 
 
 def clean(folder):
@@ -252,25 +199,7 @@ def generate(data_dir):
     print("wrote %d sample and %d secret cases to %s" % (len(SAMPLES), len(SECRET), data_dir))
 
 
-def selftest(rounds=1500):
-    rng = random.Random(2024)
-    for _ in range(rounds):
-        n = rng.randint(2, 16)
-        a = case_random(n, rng.randint(0, 10 ** 9))
-        check_valid(a)
-        assert solve(a) == brute(a), (a, solve(a), brute(a))
-    for _, make, _ in SAMPLES + SECRET:
-        a = make()
-        check_valid(a)
-        if len(a) <= 20:
-            assert solve(a) == brute(a)
-    print("selftest OK: solver == brute force on %d random small cases and all small fixed cases" % rounds)
-
-
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "--selftest":
-        selftest()
-    else:
-        out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "..", "data")
-        generate(out)
+    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "data")
+    generate(out)

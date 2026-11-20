@@ -14,7 +14,7 @@ SECRET (data/secret)
 03_edge_odd_cycle_5.in  (n=5): Edge case: pure odd cycle of length 5. Answer 2; catches 'cycle treated as a path' and 'graph is bipartite' solutions.
 04_edge_all_mutual_pairs.in  (n=10): Edge case: five disjoint 2-cycles (several components, every cycle has length 2). Answer 5.
 05_edge_star_into_2cycle.in  (n=8): Edge case: six leaves all giving to the same guest of a mutual pair (a star). Answer 7.
-06_handcrafted_anti_static_greedy.in  (n=12): Hand-crafted: 12 guests where sorting once by initial degree (static greedy) gives 6 but the optimum is 7.
+06_handcrafted_tricky_12.in  (n=12): Hand-crafted: 12 guests with several cycle/tree interactions, found by search. Answer 7. Sorting guests once by initial degree and greedily picking gives only 6, so heuristics fail here.
 07_small_random_a.in  (n=12): Small random functional graph (n = 12), mixed tree shapes and cycle lengths.
 08_small_random_b.in  (n=16): Small random functional graph (n = 16); small enough for exponential brute force.
 09_small_odd_cycles.in  (n=21): Small: three odd cycles (3, 5, 3) with trees attached; several components.
