@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Check the input validator: every .in file must be accepted (exit 42) and a
 collection of deliberately malformed inputs must be rejected (exit != 42).
 """

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Write the .ans files by running the accepted solution on every .in file.
 """
 import glob

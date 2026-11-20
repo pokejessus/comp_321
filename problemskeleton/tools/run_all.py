@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run every submission against every test case and print a verdict table.
 """
 import glob

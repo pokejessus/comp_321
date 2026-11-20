@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Test-case generator for "Awkward-Free Photo".
 
 The generator only produces INPUTS. The .ans files are produced afterwards by running

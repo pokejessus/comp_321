@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Input format validator for "Awkward-Free Photo".
 
 Exit code 42 = input is correctly formatted, anything else = rejected
