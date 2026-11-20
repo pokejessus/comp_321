@@ -1,5 +1,3 @@
-import sys
-
 def backtrack(u, n, a, selected):
     # base case: all guests decided
     if u == n:
