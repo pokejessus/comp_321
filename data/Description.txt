@@ -1,0 +1,35 @@
+Description of the test cases
+=============================
+
+SAMPLE (data/sample)
+--------------------
+1.in  (n=5): Sample 1: mutual pair (a 2-cycle) with a chain attached. Answer 3.
+2.in  (n=6): Sample 2: triangle with leaves hanging off two of its vertices (the figure in the statement). Answer 4.
+3.in  (n=4): Sample 3: a pure even cycle of length 4. Answer 2.
+
+SECRET (data/secret)
+--------------------
+01_edge_min_n2.in  (n=2): Edge case: smallest allowed input, n = 2, the two guests give to each other. Answer 1.
+02_edge_triangle.in  (n=3): Edge case: pure triangle (odd cycle, no trees). Answer 1; a solution that forgets the wrap-around edge answers 2.
+03_edge_odd_cycle_5.in  (n=5): Edge case: pure odd cycle of length 5. Answer 2; catches 'cycle treated as a path' and 'graph is bipartite' solutions.
+04_edge_all_mutual_pairs.in  (n=10): Edge case: five disjoint 2-cycles (several components, every cycle has length 2). Answer 5.
+05_edge_star_into_2cycle.in  (n=8): Edge case: six leaves all giving to the same guest of a mutual pair (a star). Answer 7.
+06_handcrafted_tricky_12.in  (n=12): Hand-crafted: 12 guests with several cycle/tree interactions, found by search. Answer 7. Sorting guests once by initial degree and greedily picking gives only 6, so heuristics fail here.
+07_small_random_a.in  (n=12): Small random functional graph (n = 12), mixed tree shapes and cycle lengths.
+08_small_random_b.in  (n=16): Small random functional graph (n = 16); small enough for exponential brute force.
+09_small_odd_cycles.in  (n=21): Small: three odd cycles (3, 5, 3) with trees attached; several components.
+10_medium_random.in  (n=2000): Normal random case, n = 2000. Mixed cycle lengths and tree shapes.
+11_medium_odd_cycles.in  (n=3000): Medium: many small odd cycles with random trees. Exposes solutions that ignore the cycle closing edge.
+12_large_cycle_even.in  (n=100000): Large: one pure cycle of length 100000 (no trees). Answer 50000. Exposes O(L^2) cycle handling.
+13_large_cycle_odd.in  (n=99999): Large: one pure cycle of odd length 99999 with shuffled labels. Answer 49999.
+14_large_chain_2cycle.in  (n=100000): Worst case for recursion: a mutual pair with a path of 99998 guests attached. Depth ~1e5: breaks recursive DFS and non-memoized DP.
+15_large_chain_triangle.in  (n=100000): Deep chain attached to a triangle instead of a 2-cycle. Recursion-depth and Fibonacci-blowup test.
+16_large_star_triangle.in  (n=100000): Large: a triangle whose three vertices receive ~33000 leaves each (huge stars). Tests aggregation over many children.
+17_large_big_cycle_trees.in  (n=100000): Large: one odd cycle of 70001 guests with 29999 guests in random trees. Tests the cycle DP with non-trivial in/out values.
+18_large_deep_thin_trees.in  (n=100000): Large: a mutual pair with long, thin, deep trees (each guest attaches to one of the 5 newest). Deep recursion with branching.
+19_large_many_small_cycles.in  (n=100000): Large: tens of thousands of tiny cycles (length 2..5), each a separate component. Tests summing over components.
+20_large_random_a.in  (n=100000): Large complicated random case (mixed cycle lengths and tree shapes), n = 100000.
+21_large_random_b.in  (n=100000): Large complicated random case with a different seed, n = 100000.
+22_large_odd_cycles.in  (n=100000): Large: many odd cycles of length 3..15 with random trees; wrap-around edge matters in every component.
+23_large_caterpillar.in  (n=100000): Large: caterpillar (a long spine with a leaf on every second spine vertex) hanging off a mutual pair. Greedy and DP both stressed.
+24_large_two_odd_cycles_deep.in  (n=100000): Large: two big odd cycles plus deep thin trees; mixes long cycles with deep trees.

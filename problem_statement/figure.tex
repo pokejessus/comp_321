@@ -1,0 +1,26 @@
+% Source of figure.png (the figure in problem.tex).
+% Build: pdflatex figure.tex && pdftoppm -r 300 -png -singlefile figure.pdf figure
+\usetikzlibrary{arrows.meta}
+
+\begin{tikzpicture}[
+    >={Stealth[length=3mm]},
+    guest/.style={circle, draw, thick, minimum size=9mm, inner sep=0pt, font=\large},
+    chosen/.style={guest, fill=gray!35, line width=1.4pt},
+    gift/.style={->, thick}
+]
+  % the cycle
+  \node[guest]  (1) at (0,0)     {1};
+  \node[guest]  (2) at (3.2,0)   {2};
+  \node[chosen] (3) at (1.6,-2.3) {3};
+  % the trees hanging off the cycle
+  \node[chosen] (4) at (-1.4,1.9) {4};
+  \node[chosen] (5) at (0.9,2.1)  {5};
+  \node[chosen] (6) at (3.2,2.1)  {6};
+
+  \draw[gift] (1) -- (2);
+  \draw[gift] (2) -- (3);
+  \draw[gift] (3) -- (1);
+  \draw[gift] (4) -- (1);
+  \draw[gift] (5) -- (1);
+  \draw[gift] (6) -- (2);
+\end{tikzpicture}
